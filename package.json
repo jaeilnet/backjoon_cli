@@ -1,0 +1,43 @@
+{
+  "name": "backjoon-js-auto-setting-cli",
+  "version": "1.0.0",
+  "description": "backjoon javascript auto setting CLI",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "rm -rf dist && tsc"
+  },
+  "author": {
+    "email": "sgsgself@naver.com",
+    "name": "jaeilnet",
+    "url": "https://github.com/jaeilnet"
+  },
+  "license": "ISC",
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "engines": {
+    "node": ">=17"
+  },
+  "bin": {
+    "cli": "./lib/index.js"
+  },
+  "keywords": [
+    "boj",
+    "backjoon",
+    "backjoon-js",
+    "backjoon-js-auto",
+    "backjoon-js-auto",
+    "backjoon-javascript",
+    "backjoon-javascript-auto"
+  ],
+  "bugs": {
+    "url": "",
+    "email": "sgsgself@naver.com"
+  },
+  "devDependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "request": "^2.88.2"
+  }
+}
