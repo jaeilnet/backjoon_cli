@@ -2,11 +2,6 @@
   "name": "backjoon-js-auto-setting-cli",
   "version": "1.0.0",
   "description": "backjoon javascript auto setting CLI",
-  "main": "dist/main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "rm -rf dist && tsc"
-  },
   "author": {
     "email": "sgsgself@naver.com",
     "name": "jaeilnet",
@@ -20,9 +15,6 @@
   "engines": {
     "node": ">=17"
   },
-  "bin": {
-    "cli": "./lib/index.js"
-  },
   "keywords": [
     "boj",
     "backjoon",
@@ -35,6 +27,13 @@
   "bugs": {
     "url": "",
     "email": "sgsgself@naver.com"
+  },
+  "bin": {
+    "cli": "./lib/index.js"
+  },
+  "scripts": {
+    "start:dev": "node ./lib/index.js",
+    "bk:cli": "npx cli"
   },
   "devDependencies": {
     "cheerio": "1.0.0-rc.12",
