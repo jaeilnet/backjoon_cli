@@ -1,5 +1,6 @@
 {
   "name": "backjoon-js-auto-setting-cli",
+  "type": "module",
   "version": "1.0.0",
   "description": "backjoon javascript auto setting CLI",
   "author": {
@@ -29,14 +30,15 @@
     "email": "sgsgself@naver.com"
   },
   "bin": {
-    "cli": "./lib/index.js"
+    "cli": "./lib/index.ts"
   },
   "scripts": {
-    "start:dev": "node ./lib/index.js",
+    "start:dev": "ts-node --esm ./lib/index.ts",
     "bk:cli": "npx cli"
   },
   "devDependencies": {
     "axios": "^1.6.7",
-    "cheerio": "1.0.0-rc.12"
+    "cheerio": "1.0.0-rc.12",
+    "ts-node": "^10.9.2"
   }
 }

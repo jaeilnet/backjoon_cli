@@ -1,22 +1,11 @@
-const cheerio = require("cheerio");
-const axios = require("axios");
-const errorHandling = require("../common/error");
+import cheerio from "cheerio";
+import axios from "axios";
+import { errorHandling } from "../common/error.js";
+import { IOResultType, ProblemNumberType } from "../../type/index.js";
 
-/**
- * 백준 문제 입력과 결과 값 type
- * @typedef {Object} Result
- * @property {string[]} input - 입력 값
- * @property {string[]} output - 결과 값
- * @property {number} count - 갯수
- *
- */
-
-/**
- * @param {number} problemNumber 문제번호
- * @returns {Promise.<Result>} Result
-
- */
-const crawling = async (problemNumber) => {
+export const copyProblem = async (
+  problemNumber: ProblemNumberType
+): Promise<IOResultType> => {
   try {
     const url = `https://www.acmicpc.net/problem/${problemNumber}`;
 
@@ -28,9 +17,10 @@ const crawling = async (problemNumber) => {
       },
     });
 
-    const result = {
+    const result: IOResultType = {
       input: [],
       output: [],
+      count: 0,
     };
 
     const $ = cheerio.load(res.data);
@@ -58,7 +48,6 @@ const crawling = async (problemNumber) => {
     };
   } catch (error) {
     errorHandling(error);
+    throw Error("문제 가져오기 실패");
   }
 };
-
-module.exports = crawling;

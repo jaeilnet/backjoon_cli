@@ -1,4 +1,4 @@
-const template = () => {
+export const template = () => {
   const inputTemplate = `
 function solution(input) {
   console.log('입력 값: ',input)
@@ -9,10 +9,8 @@ function solution(input) {
 }
 
 // 지우지마시오
-module.exports = solution;
+export default solution
 `;
 
   return inputTemplate;
 };
-
-module.exports = template;
