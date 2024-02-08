@@ -1,35 +1,38 @@
 #!/usr/bin/env node
 
-const readline = require("node:readline");
+import readline from "readline";
 
-const accessDir = require("./utils/dir/access");
-const makeBoj = require("./utils/dir/boj");
-const makeDir = require("./utils/dir/make");
-const crawling = require("./utils/crawling");
+import { accessDir } from "./utils/dir/access.js";
+import { makeBoj } from "./utils/dir/boj.js";
+import { makeDir } from "./utils/dir/make.js";
+import { copyProblem } from "./utils/crawling/index.js";
 
-const errorHandling = require("./utils/common/error");
-const submit = require("./utils/submit");
+import { errorHandling } from "./utils/common/error.js";
+import { submit } from "./utils/submit/index.js";
+import { IOResultType } from "./type/index.js";
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdin,
-});
+export class Question {
+  root: string | null;
+  problemNum: string | null;
+  path: string;
+  ioResult: IOResultType;
+  rl: readline.Interface;
 
-class Question {
-  constructor() {
+  constructor(rl: readline.Interface) {
     this.root = null;
     this.problemNum = null;
     this.path = `${this.root}/${this.problemNum}`;
     this.ioResult = {
       input: [],
       output: [],
-      count: null,
+      count: 0,
     };
+    this.rl = rl;
   }
 
   qSetRootDir = async () => {
     return new Promise((resolve) => {
-      rl.question("디렉토리를 설정하시겠습니까? (y/n): ", (answer) => {
+      this.rl.question("디렉토리를 설정하시겠습니까? (y/n): ", (answer) => {
         const answerType = ["y", "n"];
 
         if (!answerType.includes(answer)) {
@@ -47,7 +50,7 @@ class Question {
   };
 
   qMakeRootDir = async () => {
-    rl.question("생성할 디렉토리 이름을 설정해주세요: ", async (root) => {
+    this.rl.question("생성할 디렉토리 이름을 설정해주세요: ", async (root) => {
       if (accessDir(root)) {
         const setRoot = await this.retryCreateDir();
 
@@ -64,7 +67,7 @@ class Question {
   };
 
   qMakeBoj = async () => {
-    rl.question("문제번호를 입력해주세요. ex)1084: ", async (answer) => {
+    this.rl.question("문제번호를 입력해주세요. ex)1084: ", async (answer) => {
       const problemNum = answer.trim();
       const isValidAnswer = isNaN(Number(problemNum));
 
@@ -81,10 +84,10 @@ class Question {
       }
 
       try {
-        const ioResult = await crawling(problemNum);
+        const ioResult = await copyProblem(problemNum);
 
         if (!ioResult.count) {
-          rl.close();
+          this.rl.close();
           return;
         }
 
@@ -113,16 +116,16 @@ class Question {
         if (isMakeBoj) await this.qSubmit();
       } catch (error) {
         errorHandling(error);
-        rl.close();
+        this.rl.close();
       }
     });
   };
 
   qSubmit = async () => {
-    rl.setPrompt("코드 실행하기");
-    rl.prompt();
+    this.rl.setPrompt("코드 실행하기");
+    this.rl.prompt();
 
-    rl.on("line", async () => {
+    this.rl.on("line", async () => {
       const isAnswer = await submit(this.path, this.ioResult);
 
       if (isAnswer) {
@@ -132,23 +135,21 @@ class Question {
   };
 
   /**
-   * 디렉토리 재시도 함수
-   * @returns {Promise.<string>} - 디렉토리 경로
+   * 디렉토리 생성 재시도 함수
    */
-  retryCreateDir = async () => {
+  retryCreateDir = async (): Promise<string> => {
     let count = 1;
 
-    function rename() {
+    const rename = (): Promise<string> => {
       errorHandling("디렉토리가 이미 존재합니다.");
 
       if (count > 3) {
         errorHandling("디렉토리 정리 후 다시 시도해주세요.");
-        rl.close();
-        return;
+        this.rl.close();
       }
 
-      return new Promise((resolve) => {
-        rl.question("다른 이름을 입력해주세요: ", (dir) => {
+      return new Promise<string>((resolve) => {
+        this.rl.question("다른 이름을 입력해주세요: ", (dir) => {
           if (accessDir(dir)) {
             count++;
             resolve(rename());
@@ -157,11 +158,16 @@ class Question {
           }
         });
       });
-    }
+    };
 
     return await rename();
   };
 }
 
-const question = new Question();
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdin,
+});
+
+const question = new Question(rl);
 question.qSetRootDir();
