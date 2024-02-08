@@ -10,8 +10,7 @@
   },
   "license": "ISC",
   "files": [
-    "dist",
-    "bin"
+    "lib/**/*"
   ],
   "engines": {
     "node": ">=17"
@@ -29,11 +28,9 @@
     "url": "https://github.com/jaeilnet/backjoon_cli/issues",
     "email": "sgsgself@naver.com"
   },
-  "bin": {
-    "cli": "./lib/index.ts"
-  },
   "scripts": {
     "start:dev": "ts-node --esm ./lib/index.ts",
+    "start": "ts-node --esm ./lib/index.ts",
     "bk:cli": "npx cli"
   },
   "devDependencies": {
