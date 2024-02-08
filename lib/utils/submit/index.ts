@@ -18,10 +18,12 @@ export const submit = async (
       : path.join(dirName, file);
   };
 
-  const watchSolution = async (input: string) => {
-    const problem = await import(`${dirName}/index.js`);
+  const watchSolution = async (input: string): Promise<string> => {
+    const path = `${dirName}/index.js?version=${Date.now()}`;
+    const problem = await import(path);
+    const result = await problem.default(input);
 
-    return problem.default(input);
+    return result.toString();
   };
 
   const { count } = ioResult;
@@ -36,18 +38,24 @@ export const submit = async (
     const result = await watchSolution(readInputTxt);
 
     console.log("-----------------------");
-    console.log("Test Case", i);
+    console.log("\nTest Case", i);
     console.log("\nExpected Output:\n");
     console.log(readOutputTxt);
     console.log("\nActual Output:\n");
     console.log(result);
     console.log("-----------------------");
 
+    if (result === readOutputTxt) {
+      console.log("정답입니다");
+      isAnswerCorrect = true;
+    } else {
+      console.log("틀렸습니다.");
+      isAnswerCorrect = false;
+      break;
+    }
+
     // todo: 정답 체크하기
-    isAnswerCorrect = true;
   }
 
   return isAnswerCorrect;
 };
-
-// node -e "console.log(import('/Users/gv03/Documents/npm/backjoon_auto_input_js/boj/1084/index.js')('3\n6 7 8\n21'))"
