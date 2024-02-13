@@ -6,9 +6,9 @@
   "license": "ISC",
   "author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
   "files": [
-    "lib"
+    "dist"
   ],
-  "main": "lib/index.ts",
+  "main": "dist/index.ts",
   "engines": {
     "node": ">=17"
   },
@@ -26,12 +26,20 @@
   },
   "scripts": {
     "start:dev": "ts-node --esm ./lib/index.ts",
-    "start": "ts-node --esm ./lib/index.ts",
+    "start": "ts-node --esm ./dist/index.ts",
+    "build": "rm -rf dist && rollup -c",
     "bk:cli": "npx cli"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
     "axios": "^1.6.7",
     "cheerio": "1.0.0-rc.12",
-    "ts-node": "^10.9.2"
+    "rollup": "^4.10.0",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.2"
   }
 }

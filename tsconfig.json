@@ -102,7 +102,7 @@
       "*": ["*", "*.ts", "*.js"]
     }
   },
-  "include": ["lib"],
+  "include": ["lib/**/*", "rollup.config.js"],
   "exclude": ["node_modules"],
   "ts-node": {
     "esm": true
