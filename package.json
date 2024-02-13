@@ -1,5 +1,5 @@
 {
-  "name": "backjoon-js-auto-setting-cli",
+  "name": "@jaeilnet/backjoon_cli",
   "type": "module",
   "version": "1.0.0",
   "description": "backjoon javascript auto setting CLI",
@@ -8,7 +8,7 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=17"
   },
@@ -21,14 +21,16 @@
     "backjoon-javascript",
     "backjoon-javascript-auto"
   ],
+  "bin": {
+    "backjoon-cli": "dist/index.js"
+  },
   "bugs": {
     "url": "https://github.com/jaeilnet/backjoon_cli/issues"
   },
   "scripts": {
     "start:dev": "ts-node --esm ./lib/index.ts",
-    "start": "ts-node --esm ./dist/index.ts",
-    "build": "rm -rf dist && rollup -c",
-    "bk:cli": "npx cli"
+    "start": "ts-node --esm ./dist/index.js",
+    "build": "rm -rf dist && rollup -c"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",

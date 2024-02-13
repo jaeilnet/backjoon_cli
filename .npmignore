@@ -1,3 +1,5 @@
 node_modules
-dist
 .github
+lib/
+tsconfig.json
+rollup.config.js
