@@ -8,23 +8,23 @@
 ### npm
 
 ```sh
-npm install --save-dev @jaeilnet/backjoon_cli
+npm install --save-dev baekjoon-js-cli
 ```
 
 #### yarn
 
 ```sh
-yarn add --dev @jaeilnet/backjoon_cli
+yarn add --dev baekjoon-js-cli
 ```
 
 #### pnpm
 
 ```sh
-pnpm add --save-dev @jaeilnet/backjoon_cli
+pnpm add --save-dev baekjoon-js-cli
 ```
 
 ## use
 
 ```sh
-npx backjoon-cli start
+npx baekjoon-cli start
 ```
