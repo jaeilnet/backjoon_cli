@@ -63,5 +63,8 @@
 			"pnpm run prettier:fix",
 			"pnpm run lint:fix"
 		]
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
