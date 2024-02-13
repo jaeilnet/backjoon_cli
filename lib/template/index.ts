@@ -1,5 +1,5 @@
 export const template = () => {
-  const inputTemplate = `
+	const inputTemplate = `
 function solution(input) {
   console.log('입력 값: ',input)
 
@@ -12,5 +12,5 @@ function solution(input) {
 export default solution
 `;
 
-  return inputTemplate;
+	return inputTemplate;
 };

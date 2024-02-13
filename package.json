@@ -1,44 +1,67 @@
 {
-  "name": "backjoon-js-auto-setting-cli",
-  "type": "module",
-  "version": "1.0.0",
-  "description": "backjoon javascript auto setting CLI",
-  "author": {
-    "email": "sgsgself@naver.com",
-    "name": "jaeilnet",
-    "url": "https://github.com/jaeilnet"
-  },
-  "license": "ISC",
-  "files": [
-    "dist",
-    "bin"
-  ],
-  "engines": {
-    "node": ">=17"
-  },
-  "keywords": [
-    "boj",
-    "backjoon",
-    "backjoon-js",
-    "backjoon-js-auto",
-    "backjoon-js-auto",
-    "backjoon-javascript",
-    "backjoon-javascript-auto"
-  ],
-  "bugs": {
-    "url": "https://github.com/jaeilnet/backjoon_cli/issues",
-    "email": "sgsgself@naver.com"
-  },
-  "bin": {
-    "cli": "./lib/index.ts"
-  },
-  "scripts": {
-    "start:dev": "ts-node --esm ./lib/index.ts",
-    "bk:cli": "npx cli"
-  },
-  "devDependencies": {
-    "axios": "^1.6.7",
-    "cheerio": "1.0.0-rc.12",
-    "ts-node": "^10.9.2"
-  }
+	"name": "@jaeilnet/backjoon_cli",
+	"type": "module",
+	"version": "1.0.0",
+	"description": "backjoon javascript auto setting CLI",
+	"license": "ISC",
+	"author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
+	"files": [
+		"dist"
+	],
+	"main": "dist/index.js",
+	"engines": {
+		"node": ">=17"
+	},
+	"keywords": [
+		"boj",
+		"backjoon",
+		"backjoon-js",
+		"backjoon-js-auto",
+		"backjoon-js-auto",
+		"backjoon-javascript",
+		"backjoon-javascript-auto"
+	],
+	"bin": {
+		"backjoon-cli": "dist/index.js"
+	},
+	"bugs": {
+		"url": "https://github.com/jaeilnet/backjoon_cli/issues"
+	},
+	"scripts": {
+		"lint:fix": "eslint --fix 'lib/**/*'",
+		"prettier:check": "pnpm prettier --check .",
+		"prettier:fix": " pnpm prettier --write 'lib/**/*'",
+		"start:dev": "ts-node --esm ./lib/index.ts",
+		"start": "ts-node --esm ./dist/index.js",
+		"build": "rm -rf dist && rollup -c",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^25.0.7",
+		"@rollup/plugin-json": "^6.1.0",
+		"@rollup/plugin-node-resolve": "^15.2.3",
+		"@rollup/plugin-terser": "^0.4.4",
+		"@rollup/plugin-typescript": "^11.1.6",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"axios": "^1.6.7",
+		"cheerio": "1.0.0-rc.12",
+		"eslint": "^8.56.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-import": "^2.25.2",
+		"eslint-plugin-promise": "^6.0.0",
+		"husky": "^9.0.10",
+		"lint-staged": "^15.2.2",
+		"prettier": "3.2.5",
+		"rollup": "^4.10.0",
+		"ts-node": "^10.9.2",
+		"tslib": "^2.6.2",
+		"typescript": "4.9.3"
+	},
+	"lint-staged": {
+		"lib/**/*": [
+			"pnpm run prettier:fix",
+			"pnpm run lint:fix"
+		]
+	}
 }

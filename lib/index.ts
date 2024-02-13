@@ -1,173 +1,160 @@
 #!/usr/bin/env node
 
-import readline from "readline";
+import readline from 'readline';
 
-import { accessDir } from "./utils/dir/access.js";
-import { makeBoj } from "./utils/dir/boj.js";
-import { makeDir } from "./utils/dir/make.js";
-import { copyProblem } from "./utils/crawling/index.js";
+import { accessDir } from './utils/dir/access.js';
+import { makeBoj } from './utils/dir/boj.js';
+import { makeDir } from './utils/dir/make.js';
+import { copyProblem } from './utils/crawling/index.js';
 
-import { errorHandling } from "./utils/common/error.js";
-import { submit } from "./utils/submit/index.js";
-import { IOResultType } from "./type/index.js";
+import { errorHandling } from './utils/common/error.js';
+import { submit } from './utils/submit/index.js';
+import { type IOResultType } from './type/index.js';
 
 export class Question {
-  root: string | null;
-  problemNum: string | null;
-  path: string;
-  ioResult: IOResultType;
-  rl: readline.Interface;
+	root: string | null = null;
+	problemNum: string | null = null;
+	path: string = '';
+	ioResult: IOResultType = { input: [], output: [], count: 0 };
+	rl: readline.Interface;
 
-  constructor(rl: readline.Interface) {
-    this.root = null;
-    this.problemNum = null;
-    this.path = `${this.root}/${this.problemNum}`;
-    this.ioResult = {
-      input: [],
-      output: [],
-      count: 0,
-    };
-    this.rl = rl;
-  }
+	constructor(rl: readline.Interface) {
+		this.rl = rl;
+	}
 
-  qSetRootDir = async () => {
-    return new Promise((resolve) => {
-      this.rl.question("디렉토리를 설정하시겠습니까? (y/n): ", (answer) => {
-        const answerType = ["y", "n"];
+	qSetRootDir = async () => {
+		const answer = await this.askQuestion(
+			'디렉토리를 설정하시겠습니까? (y/n): ',
+		);
+		const answerType = ['y', 'n'];
+		if (!answerType.includes(answer)) {
+			errorHandling('y/n 으로만 입력해주세요');
+			this.qSetRootDir();
+		}
 
-        if (!answerType.includes(answer)) {
-          errorHandling("y/n 으로만 입력해주세요");
-          resolve(this.qSetRootDir());
-        }
+		if (answer === 'y') {
+			await this.qMakeRootDir();
+		} else {
+			await this.qMakeBoj();
+		}
+	};
 
-        if (answer === "y") {
-          resolve(this.qMakeRootDir());
-        } else {
-          resolve(this.qMakeBoj());
-        }
-      });
-    });
-  };
+	qMakeRootDir = async (): Promise<void> => {
+		const root = await this.askQuestion(
+			'생성할 디렉토리 이름을 설정해주세요: ',
+		);
+		if (accessDir(root)) {
+			this.root = await this.retryCreateDir();
+		} else {
+			this.root = root;
+		}
 
-  qMakeRootDir = async () => {
-    this.rl.question("생성할 디렉토리 이름을 설정해주세요: ", async (root) => {
-      if (accessDir(root)) {
-        const setRoot = await this.retryCreateDir();
+		await this.qMakeBoj();
+	};
 
-        if (setRoot) {
-          this.root = setRoot;
-          this.qMakeBoj();
-        }
-        return;
-      }
+	qMakeBoj = async (): Promise<void> => {
+		const answer = await this.askQuestion('문제번호를 입력해주세요. ex)1084: ');
+		const problemNum = answer.trim();
 
-      this.root = root;
-      this.qMakeBoj();
-    });
-  };
+		if (isNaN(Number(problemNum))) {
+			errorHandling('숫자만 입력해주세요');
+			await this.qMakeBoj();
+			return;
+		}
 
-  qMakeBoj = async () => {
-    this.rl.question("문제번호를 입력해주세요. ex)1084: ", async (answer) => {
-      const problemNum = answer.trim();
-      const isValidAnswer = isNaN(Number(problemNum));
+		if (accessDir(problemNum)) {
+			errorHandling('이미 생성한 문제 입니다.');
+			await this.qMakeBoj();
+			return;
+		}
 
-      if (isValidAnswer) {
-        errorHandling("숫자만 입력해주세요");
-        this.qMakeBoj();
-        return;
-      }
+		try {
+			const ioResult = await copyProblem(problemNum);
 
-      if (accessDir(problemNum)) {
-        errorHandling("이미 생성한 문제 입니다.");
-        this.qMakeBoj();
-        return;
-      }
+			if (ioResult.count === 0) {
+				this.rl.close();
+				return;
+			}
 
-      try {
-        const ioResult = await copyProblem(problemNum);
+			this.problemNum = problemNum;
+			this.ioResult = ioResult;
 
-        if (!ioResult.count) {
-          this.rl.close();
-          return;
-        }
+			if (this.root) {
+				let root = this.root;
 
-        this.problemNum = problemNum;
-        this.ioResult = ioResult;
+				if (!accessDir(root)) {
+					root = makeDir(root);
+				}
 
-        if (this.root) {
-          let root = this.root;
+				const problemNumPath = `${root}/${problemNum}`;
+				this.path = problemNumPath;
 
-          if (!accessDir(root)) {
-            root = makeDir(root);
-          }
+				const isMakeBoj = makeBoj(problemNumPath, ioResult);
+				if (isMakeBoj) await this.qSubmit();
 
-          const problemNumPath = `${root}/${problemNum}`;
-          this.path = problemNumPath;
+				return;
+			}
 
-          const isMakeBoj = await makeBoj(problemNumPath, ioResult);
-          if (isMakeBoj) await this.qSubmit();
+			this.path = problemNum;
 
-          return;
-        }
+			const isMakeBoj = makeBoj(problemNum, ioResult);
+			if (isMakeBoj) await this.qSubmit();
+		} catch (error) {
+			errorHandling(error);
+			this.rl.close();
+		}
+	};
 
-        this.path = problemNum;
+	qSubmit = async (): Promise<void> => {
+		this.rl.setPrompt('코드 실행하기');
+		this.rl.prompt();
 
-        const isMakeBoj = await makeBoj(problemNum, ioResult);
-        if (isMakeBoj) await this.qSubmit();
-      } catch (error) {
-        errorHandling(error);
-        this.rl.close();
-      }
-    });
-  };
+		this.rl.on('line', async () => {
+			const isAnswer = await submit(this.path, this.ioResult);
 
-  qSubmit = async () => {
-    this.rl.setPrompt("코드 실행하기");
-    this.rl.prompt();
+			if (isAnswer) {
+				await this.qMakeBoj();
+			}
+		});
+	};
 
-    this.rl.on("line", async () => {
-      const isAnswer = await submit(this.path, this.ioResult);
+	/**
+	 * 디렉토리 생성 재시도 함수
+	 */
+	async retryCreateDir(): Promise<string | null> {
+		let count = 1;
 
-      if (isAnswer) {
-        this.qMakeBoj();
-      }
-    });
-  };
+		while (count <= 3) {
+			errorHandling('디렉토리가 이미 존재합니다.');
+			const dir = await this.askQuestion('다른 이름을 입력해주세요: ');
+			if (accessDir(dir)) {
+				count++;
+			} else {
+				return dir;
+			}
+		}
 
-  /**
-   * 디렉토리 생성 재시도 함수
-   */
-  retryCreateDir = async (): Promise<string> => {
-    let count = 1;
+		errorHandling('디렉토리 정리 후 다시 시도해주세요.');
+		this.rl.close();
+		return null;
+	}
 
-    const rename = (): Promise<string> => {
-      errorHandling("디렉토리가 이미 존재합니다.");
-
-      if (count > 3) {
-        errorHandling("디렉토리 정리 후 다시 시도해주세요.");
-        this.rl.close();
-      }
-
-      return new Promise<string>((resolve) => {
-        this.rl.question("다른 이름을 입력해주세요: ", (dir) => {
-          if (accessDir(dir)) {
-            count++;
-            resolve(rename());
-          } else {
-            resolve(dir);
-          }
-        });
-      });
-    };
-
-    return await rename();
-  };
+	/**
+	 * 질문하는 함수
+	 */
+	private async askQuestion(question: string): Promise<string> {
+		return await new Promise((resolve) => {
+			this.rl.question(question, (answer) => {
+				resolve(answer.trim());
+			});
+		});
+	}
 }
 
 const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdin,
+	input: process.stdin,
+	output: process.stdin,
 });
 
 const question = new Question(rl);
-question.qSetRootDir();
+void question.qSetRootDir();
