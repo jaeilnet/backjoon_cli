@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 import { makeDir } from './make.js';
@@ -7,10 +7,7 @@ import { errorHandling } from '../common/error.js';
 import { IOResultType } from '../../type/index.js';
 import { template } from '../../template/index.js';
 
-export const makeBoj = async (
-	_answer: string,
-	ioResult: IOResultType,
-): Promise<boolean> => {
+export const makeBoj = (_answer: string, ioResult: IOResultType): boolean => {
 	const { input, output, count } = ioResult;
 
 	const _template = template();
@@ -24,9 +21,9 @@ export const makeBoj = async (
 			const createOutputFilePath = path.join(dirPath, `output${index}.txt`);
 			const createProblemFilePath = path.join(dirPath, 'index.js');
 
-			fs.writeFileSync(createInputFilePath, input[i]);
-			fs.writeFileSync(createOutputFilePath, output[i]);
-			fs.writeFileSync(createProblemFilePath, _template);
+			fs.writeFile(createInputFilePath, input[i]);
+			fs.writeFile(createOutputFilePath, output[i]);
+			fs.writeFile(createProblemFilePath, _template);
 		}
 
 		console.log(`문제번호: ${dirPath} 생성완료`);

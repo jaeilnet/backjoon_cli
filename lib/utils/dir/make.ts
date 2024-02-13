@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 import { accessDir } from './access.js';
@@ -11,15 +11,13 @@ export const makeDir = (dir: string): string => {
 	try {
 		let resDir = '';
 
-		const dirname = path
-			.relative('.', path.normalize(dir))
-			.split(path.sep)
-			.filter((p) => !!p);
+		const normalizedDir = path.normalize(dir);
+		const dirname = normalizedDir.split(path.sep).filter(Boolean);
 
 		dirname.forEach((d, idx) => {
 			const pathBuilder = dirname.slice(0, idx + 1).join(path.sep);
 			if (!accessDir(pathBuilder)) {
-				fs.mkdirSync(pathBuilder);
+				fs.mkdir(pathBuilder);
 
 				resDir = pathBuilder;
 			}

@@ -9,7 +9,7 @@ import { copyProblem } from './utils/crawling/index.js';
 
 import { errorHandling } from './utils/common/error.js';
 import { submit } from './utils/submit/index.js';
-import { IOResultType } from './type/index.js';
+import { type IOResultType } from './type/index.js';
 
 export class Question {
 	root: string | null;
@@ -30,8 +30,8 @@ export class Question {
 		this.rl = rl;
 	}
 
-	qSetRootDir = async () => {
-		return new Promise((resolve) => {
+	qSetRootDir = async (): Promise<unknown> => {
+		return await new Promise((resolve) => {
 			this.rl.question('디렉토리를 설정하시겠습니까? (y/n): ', (answer) => {
 				const answerType = ['y', 'n'];
 
@@ -49,44 +49,44 @@ export class Question {
 		});
 	};
 
-	qMakeRootDir = async () => {
+	qMakeRootDir = async (): Promise<void> => {
 		this.rl.question('생성할 디렉토리 이름을 설정해주세요: ', async (root) => {
 			if (accessDir(root)) {
 				const setRoot = await this.retryCreateDir();
 
-				if (setRoot) {
+				if (setRoot.length !== 0) {
 					this.root = setRoot;
-					this.qMakeBoj();
+					await this.qMakeBoj();
 				}
 				return;
 			}
 
 			this.root = root;
-			this.qMakeBoj();
+			await this.qMakeBoj();
 		});
 	};
 
-	qMakeBoj = async () => {
+	qMakeBoj = async (): Promise<void> => {
 		this.rl.question('문제번호를 입력해주세요. ex)1084: ', async (answer) => {
 			const problemNum = answer.trim();
 			const isValidAnswer = isNaN(Number(problemNum));
 
 			if (isValidAnswer) {
 				errorHandling('숫자만 입력해주세요');
-				this.qMakeBoj();
+				await this.qMakeBoj();
 				return;
 			}
 
 			if (accessDir(problemNum)) {
 				errorHandling('이미 생성한 문제 입니다.');
-				this.qMakeBoj();
+				await this.qMakeBoj();
 				return;
 			}
 
 			try {
 				const ioResult = await copyProblem(problemNum);
 
-				if (!ioResult.count) {
+				if (ioResult.count === 0) {
 					this.rl.close();
 					return;
 				}
@@ -121,7 +121,7 @@ export class Question {
 		});
 	};
 
-	qSubmit = async () => {
+	qSubmit = async (): Promise<void> => {
 		this.rl.setPrompt('코드 실행하기');
 		this.rl.prompt();
 
@@ -129,7 +129,7 @@ export class Question {
 			const isAnswer = await submit(this.path, this.ioResult);
 
 			if (isAnswer) {
-				this.qMakeBoj();
+				await this.qMakeBoj();
 			}
 		});
 	};
@@ -140,7 +140,7 @@ export class Question {
 	retryCreateDir = async (): Promise<string> => {
 		let count = 1;
 
-		const rename = (): Promise<string> => {
+		const rename = async (): Promise<string> => {
 			errorHandling('디렉토리가 이미 존재합니다.');
 
 			if (count > 3) {
@@ -148,7 +148,7 @@ export class Question {
 				this.rl.close();
 			}
 
-			return new Promise<string>((resolve) => {
+			return await new Promise<string>((resolve) => {
 				this.rl.question('다른 이름을 입력해주세요: ', (dir) => {
 					if (accessDir(dir)) {
 						count++;
@@ -170,4 +170,4 @@ const rl = readline.createInterface({
 });
 
 const question = new Question(rl);
-question.qSetRootDir();
+void question.qSetRootDir();

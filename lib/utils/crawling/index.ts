@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import axios from 'axios';
 import { errorHandling } from '../common/error.js';
-import { IOResultType, ProblemNumberType } from '../../type/index.js';
+import { type IOResultType, type ProblemNumberType } from '../../type/index.js';
 
 export const copyProblem = async (
 	problemNumber: ProblemNumberType,
@@ -9,7 +9,7 @@ export const copyProblem = async (
 	try {
 		const url = `https://www.acmicpc.net/problem/${problemNumber}`;
 
-		const res = await axios.get(url, {
+		const res = await axios.get<string>(url, {
 			headers: {
 				'user-agent':
 					'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
@@ -29,22 +29,19 @@ export const copyProblem = async (
 			throw Error('존재하지 않는 문제입니다');
 		}
 
-		let count = 1;
-
-		while (count) {
+		for (let count = 1; ; count++) {
 			const input = $(`#sample-input-${count}`).text();
 			const output = $(`#sample-output-${count}`).text();
 
-			if (!input || !output) break;
+			if (input.length === 0 || output.length === 0) break;
 
-			result['input'].push(input);
-			result['output'].push(output);
-			count++;
+			result.input.push(input);
+			result.output.push(output);
 		}
 
 		return {
 			...result,
-			count: count - 1,
+			count: result.input.length,
 		};
 	} catch (error) {
 		errorHandling(error);

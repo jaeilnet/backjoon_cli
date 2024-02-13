@@ -1,4 +1,4 @@
-import { IOResultType } from '../../type/index.js';
+import { type IOResultType } from '../../type/index.js';
 
 import fs from 'fs';
 import path from 'path';

@@ -1,7 +1,7 @@
 export type ProblemNumberType = string;
 
-export type IOResultType = {
+export interface IOResultType {
 	input: string[];
 	output: string[];
 	count: number;
-};
+}
