@@ -3,15 +3,12 @@
   "type": "module",
   "version": "1.0.0",
   "description": "backjoon javascript auto setting CLI",
-  "author": {
-    "email": "sgsgself@naver.com",
-    "name": "jaeilnet",
-    "url": "https://github.com/jaeilnet"
-  },
   "license": "ISC",
+  "author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
   "files": [
-    "lib/**/*"
+    "lib"
   ],
+  "main": "lib/index.ts",
   "engines": {
     "node": ">=17"
   },
@@ -25,8 +22,7 @@
     "backjoon-javascript-auto"
   ],
   "bugs": {
-    "url": "https://github.com/jaeilnet/backjoon_cli/issues",
-    "email": "sgsgself@naver.com"
+    "url": "https://github.com/jaeilnet/backjoon_cli/issues"
   },
   "scripts": {
     "start:dev": "ts-node --esm ./lib/index.ts",
