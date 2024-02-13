@@ -1,47 +1,56 @@
 {
-  "name": "@jaeilnet/backjoon_cli",
-  "type": "module",
-  "version": "1.0.0",
-  "description": "backjoon javascript auto setting CLI",
-  "license": "ISC",
-  "author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
-  "files": [
-    "dist"
-  ],
-  "main": "dist/index.js",
-  "engines": {
-    "node": ">=17"
-  },
-  "keywords": [
-    "boj",
-    "backjoon",
-    "backjoon-js",
-    "backjoon-js-auto",
-    "backjoon-js-auto",
-    "backjoon-javascript",
-    "backjoon-javascript-auto"
-  ],
-  "bin": {
-    "backjoon-cli": "dist/index.js"
-  },
-  "bugs": {
-    "url": "https://github.com/jaeilnet/backjoon_cli/issues"
-  },
-  "scripts": {
-    "start:dev": "ts-node --esm ./lib/index.ts",
-    "start": "ts-node --esm ./dist/index.js",
-    "build": "rm -rf dist && rollup -c"
-  },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "axios": "^1.6.7",
-    "cheerio": "1.0.0-rc.12",
-    "rollup": "^4.10.0",
-    "ts-node": "^10.9.2",
-    "tslib": "^2.6.2"
-  }
+	"name": "@jaeilnet/backjoon_cli",
+	"type": "module",
+	"version": "1.0.0",
+	"description": "backjoon javascript auto setting CLI",
+	"license": "ISC",
+	"author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
+	"files": [
+		"dist"
+	],
+	"main": "dist/index.js",
+	"engines": {
+		"node": ">=17"
+	},
+	"keywords": [
+		"boj",
+		"backjoon",
+		"backjoon-js",
+		"backjoon-js-auto",
+		"backjoon-js-auto",
+		"backjoon-javascript",
+		"backjoon-javascript-auto"
+	],
+	"bin": {
+		"backjoon-cli": "dist/index.js"
+	},
+	"bugs": {
+		"url": "https://github.com/jaeilnet/backjoon_cli/issues"
+	},
+	"scripts": {
+		"prettier:check": "pnpm prettier --check .",
+		"prettier:fix": " pnpm exec prettier . --write",
+		"start:dev": "ts-node --esm ./lib/index.ts",
+		"start": "ts-node --esm ./dist/index.js",
+		"build": "rm -rf dist && rollup -c",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^25.0.7",
+		"@rollup/plugin-json": "^6.1.0",
+		"@rollup/plugin-node-resolve": "^15.2.3",
+		"@rollup/plugin-terser": "^0.4.4",
+		"@rollup/plugin-typescript": "^11.1.6",
+		"axios": "^1.6.7",
+		"cheerio": "1.0.0-rc.12",
+		"husky": "^9.0.10",
+		"lint-staged": "^15.2.2",
+		"prettier": "3.2.5",
+		"rollup": "^4.10.0",
+		"ts-node": "^10.9.2",
+		"tslib": "^2.6.2"
+	},
+	"lint-staged": {
+		"lib/**/*": "prettier --write --ignore-unknown"
+	}
 }
