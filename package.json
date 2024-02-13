@@ -28,8 +28,9 @@
 		"url": "https://github.com/jaeilnet/backjoon_cli/issues"
 	},
 	"scripts": {
+		"lint:fix": "eslint --fix 'lib/**/*'",
 		"prettier:check": "pnpm prettier --check .",
-		"prettier:fix": " pnpm exec prettier . --write",
+		"prettier:fix": " pnpm prettier --write 'lib/**/*'",
 		"start:dev": "ts-node --esm ./lib/index.ts",
 		"start": "ts-node --esm ./dist/index.js",
 		"build": "rm -rf dist && rollup -c",
@@ -58,6 +59,9 @@
 		"typescript": "4.9.3"
 	},
 	"lint-staged": {
-		"lib/**/*": "prettier --write --ignore-unknown"
+		"lib/**/*": [
+			"pnpm run prettier:fix",
+			"pnpm run lint:fix"
+		]
 	}
 }
