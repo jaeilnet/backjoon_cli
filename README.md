@@ -20,7 +20,7 @@ yarn add --dev baekjoon-js-cli
 #### pnpm
 
 ```sh
-pnpm add --save-dev baekjoon-js-cli
+pnpm install --save-dev baekjoon-js-cli
 ```
 
 ## use
