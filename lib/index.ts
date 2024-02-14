@@ -10,6 +10,7 @@ import { copyProblem } from './utils/crawling/index.js';
 import { errorHandling } from './utils/common/error.js';
 import { submit } from './utils/submit/index.js';
 import { type IOResultType } from './type/index.js';
+import { getPackageModuleType } from './utils/common/module.js';
 
 export class Question {
 	root: string | null = null;
@@ -23,6 +24,12 @@ export class Question {
 	}
 
 	qSetRootDir = async () => {
+		if (getPackageModuleType() !== 'module') {
+			console.log('ESM으로 실행해주시기 바랍니다.');
+			this.rl.close();
+			return;
+		}
+
 		const answer = await this.askQuestion(
 			'디렉토리를 설정하시겠습니까? (y/n): ',
 		);
