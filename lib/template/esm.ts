@@ -1,4 +1,4 @@
-export const template = () => {
+export const esmTemplate = () => {
 	const inputTemplate = `
 function solution(input) {
   console.log('입력 값: ',input)

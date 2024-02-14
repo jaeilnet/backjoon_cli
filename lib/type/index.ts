@@ -5,3 +5,5 @@ export interface IOResultType {
 	output: string[];
 	count: number;
 }
+
+export type PackageModuleType = 'commonjs' | 'module';

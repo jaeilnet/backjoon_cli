@@ -5,12 +5,15 @@ import { makeDir } from './make.js';
 
 import { errorHandling } from '../common/error.js';
 import { IOResultType } from '../../type/index.js';
-import { template } from '../../template/index.js';
+import { esmTemplate } from '../../template/esm.js';
+import { commonTemplate } from '../../template/common.js';
+import { getPackageModuleType } from '../common/module.js';
 
 export const makeBoj = (_answer: string, ioResult: IOResultType): boolean => {
 	const { input, output, count } = ioResult;
 
-	const _template = template();
+	const template =
+		getPackageModuleType() === 'commonjs' ? commonTemplate() : esmTemplate();
 
 	try {
 		const dirPath = makeDir(_answer);
@@ -23,7 +26,7 @@ export const makeBoj = (_answer: string, ioResult: IOResultType): boolean => {
 
 			fs.writeFile(createInputFilePath, input[i]);
 			fs.writeFile(createOutputFilePath, output[i]);
-			fs.writeFile(createProblemFilePath, _template);
+			fs.writeFile(createProblemFilePath, template);
 		}
 
 		console.log(`문제번호: ${dirPath} 생성완료`);
