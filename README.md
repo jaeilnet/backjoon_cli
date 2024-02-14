@@ -46,7 +46,7 @@ pnpm install --save-dev baekjoon-js-cli
 ## use
 
 ```sh
-npx baekjoon-cli start
+npx baekjoon-js-cli start
 ```
 
 ## 데모영상

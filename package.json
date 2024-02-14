@@ -1,7 +1,7 @@
 {
 	"name": "baekjoon-js-cli",
 	"type": "module",
-	"version": "1.0.2",
+	"version": "0.0.4",
 	"description": "baekjoon javascript auto setting CLI",
 	"license": "ISC",
 	"author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
@@ -13,6 +13,11 @@
 	"engines": {
 		"node": ">=17"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jaeilnet/baekjoon-js-cli"
+	},
+	"homepage": "https://github.com/jaeilnet/baekjoon-js-cli",
 	"keywords": [
 		"boj",
 		"baekjoon",
@@ -23,10 +28,10 @@
 		"baekjoon-javascript-auto"
 	],
 	"bin": {
-		"baekjoon-cli": "dist/index.js"
+		"baekjoon-js-cli": "dist/index.js"
 	},
 	"bugs": {
-		"url": "https://github.com/jaeilnet/baekjoon_cli/issues"
+		"url": "https://github.com/jaeilnet/baekjoon-js-cli/issues"
 	},
 	"scripts": {
 		"lint:fix": "eslint --fix 'lib/**/*'",
