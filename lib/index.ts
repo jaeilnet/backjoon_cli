@@ -31,8 +31,9 @@ export class Question {
 		}
 
 		const answer = await this.askQuestion(
-			'디렉토리를 설정하시겠습니까? (y/n): ',
+			'사용하실 디렉토리를 설정하시겠습니까? (y/n): ',
 		);
+
 		const answerType = ['y', 'n'];
 		if (!answerType.includes(answer)) {
 			errorHandling('y/n 으로만 입력해주세요');
@@ -47,15 +48,7 @@ export class Question {
 	};
 
 	qMakeRootDir = async (): Promise<void> => {
-		const root = await this.askQuestion(
-			'생성할 디렉토리 이름을 설정해주세요: ',
-		);
-		if (accessDir(root)) {
-			this.root = await this.retryCreateDir();
-		} else {
-			this.root = root;
-		}
-
+		this.root = await this.askQuestion('생성할 디렉토리 이름을 설정해주세요: ');
 		await this.qMakeBoj();
 	};
 
@@ -151,7 +144,7 @@ export class Question {
 	 */
 	private async askQuestion(question: string): Promise<string> {
 		return await new Promise((resolve) => {
-			this.rl.question(question, (answer) => {
+			this.rl.question(`${question}\n`, (answer) => {
 				resolve(answer.trim());
 			});
 		});
