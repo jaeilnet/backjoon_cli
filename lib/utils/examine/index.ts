@@ -3,7 +3,7 @@ import { type IOResultType } from '../../type/index.js';
 import fs from 'fs';
 import path from 'path';
 
-export const submit = async (
+export const examine = async (
 	dirPath: string,
 	ioResult: IOResultType,
 ): Promise<boolean> => {

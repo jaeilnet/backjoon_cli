@@ -8,7 +8,7 @@ import { makeDir } from './utils/dir/make.js';
 import { copyProblem } from './utils/crawling/index.js';
 
 import { errorHandling } from './utils/common/error.js';
-import { submit } from './utils/submit/index.js';
+import { examine } from './utils/examine/index.js';
 import { type IOResultType } from './type/index.js';
 import { getPackageModuleType } from './utils/common/module.js';
 
@@ -90,27 +90,28 @@ export class Question {
 				this.path = problemNumPath;
 
 				const isMakeBoj = makeBoj(problemNumPath, ioResult);
-				if (isMakeBoj) await this.qSubmit();
+				if (isMakeBoj) await this.qCheck();
 
 				return;
 			}
 
 			this.path = problemNum;
 
-			const isMakeBoj = makeBoj(problemNum, ioResult);
-			if (isMakeBoj) await this.qSubmit();
+			if (makeBoj(problemNum, ioResult)) {
+				await this.qCheck();
+			}
 		} catch (error) {
 			errorHandling(error);
 			this.rl.close();
 		}
 	};
 
-	qSubmit = async (): Promise<void> => {
-		this.rl.setPrompt('코드 실행하기');
+	qCheck = async (): Promise<void> => {
+		this.rl.setPrompt('코드 실행하기\n');
 		this.rl.prompt();
 
 		this.rl.on('line', async () => {
-			const isAnswer = await submit(this.path, this.ioResult);
+			const isAnswer = await examine(this.path, this.ioResult);
 
 			if (isAnswer) {
 				await this.qMakeBoj();
