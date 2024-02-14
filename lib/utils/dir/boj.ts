@@ -7,6 +7,8 @@ import { errorHandling } from '../common/error.js';
 import { IOResultType } from '../../type/index.js';
 import { esmTemplate } from '../../template/esm.js';
 
+import { exec } from 'node:child_process';
+
 export const makeBoj = (_answer: string, ioResult: IOResultType): boolean => {
 	const { input, output, count } = ioResult;
 
@@ -26,7 +28,10 @@ export const makeBoj = (_answer: string, ioResult: IOResultType): boolean => {
 			fs.writeFile(createProblemFilePath, template);
 		}
 
-		console.log(`문제번호: ${dirPath} 생성완료`);
+		console.log(`문제번호: ${dirPath} 생성완료\n`);
+
+		exec(`code ${dirPath}/index.js`);
+
 		return true;
 	} catch (error) {
 		errorHandling(error);
