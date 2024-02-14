@@ -1,5 +1,5 @@
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 import { accessDir } from './access.js';
 import { errorHandling } from '../common/error.js';
@@ -9,7 +9,7 @@ import { errorHandling } from '../common/error.js';
  */
 export const makeDir = (dir: string): string => {
 	try {
-		let resDir = '';
+		let dirPath = dir;
 
 		const normalizedDir = path.normalize(dir);
 		const dirname = normalizedDir.split(path.sep).filter(Boolean);
@@ -18,13 +18,13 @@ export const makeDir = (dir: string): string => {
 			const pathBuilder = dirname.slice(0, idx + 1).join(path.sep);
 			if (!accessDir(pathBuilder)) {
 				fs.mkdir(pathBuilder);
+				console.log(`디렉토리: ${pathBuilder} 생성완료`);
 
-				resDir = pathBuilder;
+				dirPath = pathBuilder;
 			}
 		});
 
-		console.log(`디렉토리: ${resDir} 생성완료`);
-		return resDir;
+		return dirPath;
 	} catch (error) {
 		errorHandling(error);
 		throw Error('디렉토리 생성 실패');
