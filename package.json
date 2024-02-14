@@ -1,12 +1,13 @@
 {
 	"name": "baekjoon-js-cli",
 	"type": "module",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"description": "baekjoon javascript auto setting CLI",
 	"license": "ISC",
 	"author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
 	"files": [
-		"dist"
+		"dist",
+		"assert"
 	],
 	"main": "dist/index.js",
 	"engines": {
