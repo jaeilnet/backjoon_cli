@@ -1,11 +1,17 @@
 import cheerio from 'cheerio';
 import axios from 'axios';
 import { errorHandling } from '../common/error.js';
-import { type IOResultType, type ProblemNumberType } from '../../type/index.js';
+import {
+	IOResultType,
+	IProblemCrawlerResponseType,
+	IProblemCrawlerType,
+	ProblemCrawlerKey,
+	ProblemNumberType,
+} from '../../type/index.js';
 
 export const copyProblem = async (
 	problemNumber: ProblemNumberType,
-): Promise<IOResultType> => {
+): Promise<IProblemCrawlerResponseType> => {
 	try {
 		const url = `https://www.acmicpc.net/problem/${problemNumber}`;
 
@@ -17,10 +23,25 @@ export const copyProblem = async (
 			},
 		});
 
-		const result: IOResultType = {
+		const io: IOResultType = {
 			input: [],
 			output: [],
 			count: 0,
+		};
+
+		const problemResult: IProblemCrawlerType = {
+			description: {
+				title: '',
+				desc: [],
+			},
+			input: {
+				title: '',
+				desc: [],
+			},
+			output: {
+				title: '',
+				desc: [],
+			},
 		};
 
 		const $ = cheerio.load(res.data);
@@ -29,19 +50,31 @@ export const copyProblem = async (
 			throw Error('존재하지 않는 문제입니다');
 		}
 
+		for (const key in problemResult) {
+			const title = $(`#${key} > .headline > h2`).text();
+
+			$(`#${key} > #problem_${key}`).each((i, el) => {
+				problemResult[key as ProblemCrawlerKey].desc.push($(el).text().trim());
+			});
+
+			problemResult[key as ProblemCrawlerKey].title = title;
+		}
+
 		for (let count = 1; ; count++) {
 			const input = $(`#sample-input-${count}`).text();
 			const output = $(`#sample-output-${count}`).text();
 
 			if (input.length === 0 || output.length === 0) break;
 
-			result.input.push(input);
-			result.output.push(output);
+			io.input.push(input);
+			io.output.push(output);
+			io.count = count;
 		}
 
 		return {
-			...result,
-			count: result.input.length,
+			...problemResult,
+			io,
+			url,
 		};
 	} catch (error) {
 		errorHandling(error);
