@@ -69,15 +69,15 @@ export class Question {
 		}
 
 		try {
-			const ioResult = await copyProblem(problemNum);
+			const getCopyProblem = await copyProblem(problemNum);
 
-			if (ioResult.count === 0) {
+			if (getCopyProblem.io.count === 0) {
 				this.rl.close();
 				return;
 			}
 
 			this.problemNum = problemNum;
-			this.ioResult = ioResult;
+			this.ioResult = getCopyProblem.io;
 
 			if (this.root) {
 				let root = this.root;
@@ -89,7 +89,7 @@ export class Question {
 				const problemNumPath = `${root}/${problemNum}`;
 				this.path = problemNumPath;
 
-				const isMakeBoj = makeBoj(problemNumPath, ioResult);
+				const isMakeBoj = makeBoj(problemNumPath, getCopyProblem);
 				if (isMakeBoj) await this.qCheck();
 
 				return;
@@ -97,7 +97,7 @@ export class Question {
 
 			this.path = problemNum;
 
-			if (makeBoj(problemNum, ioResult)) {
+			if (makeBoj(problemNum, getCopyProblem)) {
 				await this.qCheck();
 			}
 		} catch (error) {
