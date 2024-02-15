@@ -107,6 +107,27 @@ export class Question {
 	};
 
 	qCheck = async (): Promise<void> => {
+		this.rl.on('SIGINT', async () => {
+			const answer = await this.askQuestion(
+				'다른 문제를 푸시려면 (y/n)을 입력해주세요, 종료하시려면 아무 키나 눌러주십시오. ',
+			);
+
+			const answerType = ['y', 'n'];
+			if (!answerType.includes(answer)) {
+				this.rl.close();
+				return;
+			}
+
+			if (answer === 'y') {
+				await this.qMakeBoj();
+			} else {
+				console.log('계속 진행해주세요.');
+				await this.qCheck();
+				return;
+			}
+		});
+
+		this.rl.resume();
 		this.rl.setPrompt('코드 실행하기\n');
 		this.rl.prompt();
 
