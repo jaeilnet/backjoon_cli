@@ -51,4 +51,4 @@ npx baekjoon-js-cli start
 
 ## 데모영상
 
-![demo](https://github.com/jopemachine/baekjoon-cli-utils/assets/77621337/04ca7e92-084b-495c-bc69-3b23f5031515)
+![데모3](https://github.com/jaeilnet/baekjoon-js-cli/assets/77621337/c71d226f-e3c5-41c0-bb5d-7fd38374785c)

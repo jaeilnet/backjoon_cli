@@ -1,7 +1,7 @@
 {
 	"name": "baekjoon-js-cli",
 	"type": "module",
-	"version": "0.0.4",
+	"version": "0.0.7",
 	"description": "baekjoon javascript auto setting CLI",
 	"license": "ISC",
 	"author": "jaeilnet sgsgself@naver.com https://github.com/jaeilnet",
@@ -40,6 +40,7 @@
 		"start:dev": "ts-node --esm ./lib/index.ts",
 		"start": "ts-node --esm ./dist/index.js",
 		"build": "rm -rf dist && rollup -c",
+		"prod": "pnpm build && npm publish",
 		"prepare": "husky"
 	},
 	"devDependencies": {
